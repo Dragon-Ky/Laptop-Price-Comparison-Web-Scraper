@@ -1,20 +1,22 @@
 <?php
-$DT_HOST = 'localhost';
-$DT_USER = 'root';
-$DT_PASS = 'giaky113';
-$DT_NAME   = 'wed_laptop';
+// db_config.php
 
-// tạo chuỗi kết nối dns
-$dns = "mysql:host=$DT_HOST;dbname=$DT_NAME;charset=utf8";
+define('DB_HOST', 'localhost');
+define('DB_NAME', 'wed_compare_laptop_prices');
+define('DB_USER', 'root');
+define('DB_PASS', 'giaky113');
 
-//Cấu hình giúp an toàn và tiện lợi hơn khi làm việc với PDO
-$options = [
-    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, // Hiển thị lỗi dưới dạng ngoại lệ
-    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,// Thiết lập chế độ lấy dữ liệu mặc định là mảng kết hợp
-];
-try {
-    $pdo = new PDO($dns, $DT_USER, $DT_PASS, $options);
-} catch (PDOException $e) {
-    die("Kết nối thất bại: " . $e->getMessage());
+function getPDO() {
+    $dsn = "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=utf8mb4";
+    $options = [
+        PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        PDO::ATTR_EMULATE_PREPARES   => false,
+    ];
+    try {
+        return new PDO($dsn, DB_USER, DB_PASS, $options);
+    } catch (PDOException $e) {
+        throw new PDOException($e->getMessage(), (int)$e->getCode());
+    }
 }
 ?>

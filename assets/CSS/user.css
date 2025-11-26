@@ -1,0 +1,185 @@
+/* =========================================
+   RESET & GLOBAL STYLES
+   ========================================= */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f0f2f5; /* Màu nền xám nhẹ dịu mắt */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* =========================================
+   FORM CONTAINER (CARD)
+   ========================================= */
+.form-container {
+    background-color: #ffffff;
+    width: 100%;
+    max-width: 420px; /* Độ rộng tối đa của form */
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); /* Đổ bóng nhẹ tạo chiều sâu */
+    margin: 20px;
+}
+
+/* Tiêu đề form */
+.form-container h2 {
+    text-align: center;
+    color: #1a73e8; /* Màu xanh chủ đạo */
+    margin-bottom: 25px;
+    font-size: 24px;
+    font-weight: 600;
+}
+
+/* =========================================
+   INPUTS & LABELS
+   ========================================= */
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 6px;
+    color: #555;
+    display: block;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+    width: 100%;
+    padding: 12px 15px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 15px;
+    transition: all 0.3s ease;
+}
+
+/* Hiệu ứng khi click vào ô nhập */
+input:focus {
+    border-color: #1a73e8;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.1);
+}
+
+/* Style cho ô input bị khóa (Readonly - dùng trong reset password) */
+input[readonly] {
+    background-color: #e9ecef;
+    color: #6c757d;
+    cursor: not-allowed;
+    border-color: #ced4da;
+}
+
+/* =========================================
+   BUTTONS
+   ========================================= */
+button[type="submit"] {
+    background-color: #1a73e8;
+    color: white;
+    border: none;
+    padding: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 5px;
+    width: 100%;
+}
+
+button[type="submit"]:hover {
+    background-color: #1557b0;
+}
+
+/* =========================================
+   LINKS & NAVIGATION
+   ========================================= */
+a {
+    color: #1a73e8;
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 0.2s;
+}
+
+a:hover {
+    color: #0f4c9b;
+    text-decoration: underline;
+}
+
+/* Căn giữa các link ở cuối form */
+.form-container > a, 
+.form-container p {
+    display: block;
+    text-align: center;
+    margin-top: 15px;
+}
+
+.form-container p a {
+    margin: 0 5px;
+}
+
+/* Link hủy bỏ (màu xám) */
+a.cancel-link {
+    color: #666;
+}
+a.cancel-link:hover {
+    color: #333;
+}
+
+/* =========================================
+   CUSTOM: RESET PASSWORD PAGE
+   ========================================= */
+/* Căn chỉnh label và nút gửi lại mã trên cùng 1 dòng */
+.label-resend-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+}
+
+.label-resend-wrapper label {
+    margin-bottom: 0; /* Ghi đè margin mặc định */
+}
+
+.resend-link-button {
+    font-size: 12px;
+    font-style: italic;
+    color: #e67e22; /* Màu cam nổi bật cho hành động gửi lại */
+}
+
+/* =========================================
+   MESSAGES (ALERT BOXES)
+   ========================================= */
+/* Giả sử file _display_messages.php sinh ra div có class .alert */
+.alert {
+    padding: 12px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    font-size: 14px;
+    text-align: center;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.alert-danger, .alert-error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}

@@ -26,8 +26,6 @@ function curl_get($url) {
 
 /**
  * Lấy số từ một chuỗi giá (ví dụ: "10.390.000 đ" -> 10390000)
- *
- * *** PHIÊN BẢN SỬA LỖI GIÁ TIỀN ***
  */
 function parse_price_vi($text) {
     // Xóa tất cả mọi thứ không phải là số (dấu chấm, dấu cách, chữ "đ", "₫"...)
@@ -39,10 +37,6 @@ function parse_price_vi($text) {
 
 
 /**
- * Định dạng số thành tiền tệ (ví dụ: 10390000 -> "10.390.000 đ")
- */
-
-/**Ư
  * So sánh độ tương đồng của 2 chuỗi (đơn giản)
  */
 function fuzzy_match($query, $string) {
@@ -50,6 +44,10 @@ function fuzzy_match($query, $string) {
     similar_text(strtolower($query), strtolower($string), $percent);
     return $percent;
 }
+
+/**
+ * Định dạng số thành tiền tệ (ví dụ: 10390000 -> "10.390.000 ₫")
+ */
 function format_price($price) {
     // Ép về chuỗi
     $price = trim((string)$price);
@@ -69,6 +67,9 @@ function format_price($price) {
     return number_format($price, 0, ',', '.') . '₫';
 }
 
+/**
+ * Chuẩn hóa văn bản: bỏ dấu, lowercase, bỏ ký tự đặc biệt
+ */
 function normalize_text($str) {
     $str = trim($str);
     $str = html_entity_decode($str, ENT_QUOTES | ENT_HTML5, 'UTF-8');
@@ -107,8 +108,87 @@ function normalize_text($str) {
 
     // Giữ lại chữ và số
     $str = preg_replace('/[^a-z0-9]+/', ' ', $str);
-    return trim($str);
+    $str = trim($str); // Trim lại 1 lần nữa sau khi thay thế
+
+    return $str;
+}
+?>
+
+<?php
+function is_laptop($name) {
+    $laptop_keywords = ['laptop', 'notebook', 'book', 'ultrabook', 'macbook','DELL','HP','ASUS','ACER','LENOVO','MSI','MACBOOK','SURFACE','IDEAPAD','VIVOBOOK','PAVILION','ENVY','ROG','TUF','LEGION','THINKPAD'];
+    $name_lower = strtolower($name);
+    
+    foreach ($laptop_keywords as $keyword) {
+        if (str_contains($name_lower, $keyword)) {
+            return true;
+        }
+    }
+    return false;
 }
 
-
+/**
+ * Kiểm tra xem tên sản phẩm có phải là phụ kiện/linh kiện không
+ * (VD: Sạc laptop, Pin, Màn hình, RAM...)
+ */
+function is_accessory($name) {
+    $accessory_keywords = [
+        'sạc',
+        'pin',
+        'pin dự phòng',
+        'adapter',
+        'charger',
+        'cáp',
+        'cable',
+        'bàn phím',
+        'keyboard',
+        'chuột',
+        'mouse',
+        'tai nghe',
+        'headphone',
+        'speaker',
+        'loa',
+        'màn hình',
+        'monitor',
+        'ram',
+        'ổ cứng',
+        'ssd',
+        'hdd',
+        'gpu',
+        'vga',
+        'card màn hình',
+        'bộ nhớ',
+        'cpu',
+        'mainboard',
+        'bo mạch',
+        'quạt',
+        'fan',
+        'tản nhiệt',
+        'cooling pad',
+        'pad',
+        'túi',
+        'balo',
+        'case',
+        'bao',
+        'kính cường lực',
+        'miếng dán',
+        'dán màn hình',
+        'hub',
+        'dock',
+        'bộ chuyển',
+        'converter',
+        'nút cách ly',
+        'bộ vệ sinh',
+        'làm sạch'
+    ];
+    
+    $name_lower = strtolower($name);
+    
+    foreach ($accessory_keywords as $keyword) {
+        if (str_contains($name_lower, $keyword)) {
+            return true;
+        }
+    }
+    return false;
+}
 ?>

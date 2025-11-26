@@ -1,0 +1,72 @@
+/* search.css */
+
+/* Vùng chứa nội dung chính (Bên phải Sidebar) */
+.main-content {
+    flex: 1; /* Chiếm toàn bộ không gian còn lại */
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Căn giữa theo chiều ngang */
+    justify-content: center; /* Căn giữa theo chiều dọc (nếu muốn) */
+    padding: 40px;
+    /* Trừ đi chiều cao header nếu có, hoặc để min-height */
+    padding-bottom: 300px; 
+    
+    min-height: 100vh;
+    
+}
+
+/* Tiêu đề */
+.search-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1f2937; /* Màu xám đậm */
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+/* Form bao quanh input và button */
+.search-box {
+    display: flex;
+    width: 100%;
+    max-width: 600px; /* Độ rộng tối đa của thanh tìm kiếm */
+    background: #fff;
+    border-radius: 50px; /* Bo tròn dạng viên thuốc */
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    border: 1px solid #e5e7eb;
+    overflow: hidden; /* Cắt các góc thừa của con bên trong */
+    transition: all 0.3s ease;
+}
+
+/* Hiệu ứng khi click vào form */
+.search-box:focus-within {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    border-color: #3b82f6; /* Viền xanh khi nhập */
+    transform: translateY(-2px);
+}
+
+/* Ô nhập liệu */
+.search-input {
+    flex: 1; /* Chiếm hết khoảng trống trừ nút bấm */
+    border: none;
+    padding: 15px 25px;
+    font-size: 16px;
+    outline: none; /* Bỏ viền mặc định */
+    color: #374151;
+}
+
+/* Nút tìm kiếm */
+.search-btn {
+    background-color: #3b82f6; /* Màu xanh chủ đạo */
+    color: white;
+    border: none;
+    padding: 0 30px;
+    font-weight: 600;
+    font-size: 15px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    border-left: 1px solid #eee;
+}
+
+.search-btn:hover {
+    background-color: #2563eb; /* Màu xanh đậm hơn khi hover */
+}

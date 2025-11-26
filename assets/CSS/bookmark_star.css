@@ -1,0 +1,41 @@
+    /* CSS cho nút Bookmark (Ngôi sao) */
+.btn-bookmark-star {
+    font-size: 24px; /* Kích thước ngôi sao */
+    cursor: pointer;
+    color: #ccc; /* Màu mặc định (Trắng/Xám) */
+    transition: color 0.2s ease;
+}
+
+/* Trạng thái khi đã được bookmark (Vàng) */
+.btn-bookmark-star.bookmarked {
+    color: #FFD700; /* Màu vàng */
+}
+
+/* Trạng thái khi đang tải (AJAX) */
+.btn-bookmark-star.loading {
+    opacity: 0.5;
+    cursor: wait;
+}
+
+/* (Tùy chọn) Đổi màu khi hover */
+.btn-bookmark-star:not(.bookmarked):hover {
+    color: #aaa;
+}
+
+.btn-remove-bookmark,
+.btn-undo-remove {
+    padding: 6px 12px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.btn-remove-bookmark {
+    background: #ff4d4d;
+    color: white;
+}
+
+.btn-undo-remove {
+    background: #4caf50;
+    color: white;
+}

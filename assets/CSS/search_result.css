@@ -1,0 +1,202 @@
+/* =========================================
+   GLOBAL & LAYOUT
+   ========================================= */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
+    background-color: #f9fafb;
+    line-height: 1.6;
+}
+
+h2 {
+    color: #1f2937;
+    font-size: 24px;
+    margin-bottom: 20px;
+    font-weight: 700;
+}
+
+h2 em {
+    color: #2563eb; /* Màu xanh cho từ khóa tìm kiếm */
+    font-style: normal;
+}
+
+hr {
+    border: 0;
+    border-top: 1px solid #e5e7eb;
+    margin: 30px 0;
+}
+
+/* =========================================
+   FILTER FORM (Thanh bộ lọc)
+   ========================================= */
+form {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    border: 1px solid #e5e7eb;
+    
+    /* Flexbox để dàn hàng ngang */
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px !important; /* Ghi đè gap inline của bạn */
+    align-items: flex-end !important;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    align-items: center; /* Căn giữa các phần tử con theo chiều ngang */
+    text-align: center;  /* Đảm bảo chữ bên trong label cũng được căn giữa */
+}
+
+.filter-group label {
+    font-size: 13px;
+    font-weight: 600 !important;
+    color: #4b5563;
+    text-transform: uppercase;
+}
+
+/* Style cho các ô Select */
+.filter-group select {
+    padding: 8px 12px !important;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    background-color: #fff;
+    font-size: 14px;
+    min-width: 140px;
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.filter-group select:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+/* Nút Lọc Sản Phẩm */
+button[type="submit"] {
+    background-color: #2563eb !important;
+    color: white !important;
+    border: none !important;
+    padding: 9px 20px !important;
+    border-radius: 6px !important;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    height: 38px; /* Cân bằng chiều cao với ô select */
+}
+
+button[type="submit"]:hover {
+    background-color: #1d4ed8 !important;
+}
+
+/* =========================================
+   RESULTS TABLE (Bảng kết quả)
+   ========================================= */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+    border-radius: 8px;
+    overflow: hidden; /* Để bo góc hoạt động */
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    margin-top: 20px;
+    border: none !important; /* Gỡ bỏ border=1 của HTML */
+}
+
+/* Header bảng */
+th {
+    background-color: #f3f4f6;
+    color: #374151;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 12px;
+    padding: 15px;
+    text-align: left;
+    border-bottom: 2px solid #e5e7eb;
+}
+
+/* Các dòng dữ liệu */
+td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #f3f4f6;
+    font-size: 14px;
+    vertical-align: middle;
+    color: #4b5563;
+}
+
+tr:hover td {
+    background-color: #f9fafb;
+}
+
+/* --- TÙY CHỈNH CỘT --- */
+/* Cột Tên sản phẩm */
+td:nth-child(2) {
+    font-weight: 600;
+    color: #111827;
+    max-width: 300px;
+}
+
+/* Cột Giá (Cột thứ 7) */
+td:nth-child(7) {
+    color: #dc2626; /* Màu đỏ */
+    font-weight: 700;
+    font-size: 15px;
+}
+
+/* Nút Xem */
+td a[target="_blank"] {
+    display: inline-block;
+    padding: 4px 10px;
+    background-color: #eff6ff;
+    color: #2563eb;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+td a[target="_blank"]:hover {
+    background-color: #2563eb;
+    color: #fff;
+}
+
+/* =========================================
+   BOOKMARK STAR (Ngôi sao)
+   ========================================= */
+.btn-bookmark-star {
+    font-size: 22px;
+    cursor: pointer;
+    color: #d1d5db; /* Màu xám khi chưa lưu */
+    transition: transform 0.2s, color 0.2s;
+    display: inline-block;
+}
+
+/* Khi đã lưu (có class .bookmarked) */
+.btn-bookmark-star.bookmarked {
+    color: #f59e0b; /* Màu vàng cam */
+}
+
+.btn-bookmark-star:hover {
+    transform: scale(1.2); /* Phóng to nhẹ khi di chuột */
+}
+
+/* =========================================
+   LINK QUAY LẠI
+   ========================================= */
+a[href*="Search.php"] {
+    display: inline-block;
+    margin-top: 20px;
+    color: #6b7280;
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+a[href*="Search.php"]:hover {
+    color: #111827;
+    text-decoration: underline;
+}
