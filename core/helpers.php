@@ -141,7 +141,7 @@ function is_accessory($name) {
         'cáp',
         'cable',
         'bàn phím',
-        'keyboard',
+        'keyboard', 
         'chuột',
         'mouse',
         'tai nghe',

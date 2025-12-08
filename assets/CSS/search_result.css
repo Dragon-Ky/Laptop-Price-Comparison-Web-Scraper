@@ -47,8 +47,7 @@ form {
     display: flex;
     flex-direction: column;
     gap: 5px;
-    align-items: center; /* Căn giữa các phần tử con theo chiều ngang */
-    text-align: center;  /* Đảm bảo chữ bên trong label cũng được căn giữa */
+   
 }
 
 .filter-group label {
@@ -69,6 +68,7 @@ form {
     cursor: pointer;
     outline: none;
     transition: border-color 0.2s;
+    color: #666;
 }
 
 .filter-group select:focus {
@@ -115,8 +115,8 @@ th {
     text-transform: uppercase;
     font-size: 12px;
     padding: 15px;
-    text-align: left;
     border-bottom: 2px solid #e5e7eb;
+    align-items: center;
 }
 
 /* Các dòng dữ liệu */
@@ -126,6 +126,8 @@ td {
     font-size: 14px;
     vertical-align: middle;
     color: #4b5563;
+    align-items: center;
+    
 }
 
 tr:hover td {
@@ -139,29 +141,68 @@ td:nth-child(2) {
     color: #111827;
     max-width: 300px;
 }
-
+table tr th:nth-child(1), table tr td:nth-child(1),
+table tr th:nth-child(3), table tr td:nth-child(3),
+table tr th:nth-child(4), table tr td:nth-child(4),
+table tr th:nth-child(5), table tr td:nth-child(5),
+table tr th:nth-child(6), table tr td:nth-child(6),
+table tr th:nth-child(7), table tr td:nth-child(7),
+table tr th:nth-child(8), table tr td:nth-child(8) {
+    text-align: center;
+}
 /* Cột Giá (Cột thứ 7) */
 td:nth-child(7) {
-    color: #dc2626; /* Màu đỏ */
-    font-weight: 700;
+    color: #000000; /* Màu đỏ */
+    
     font-size: 15px;
 }
 
 /* Nút Xem */
 td a[target="_blank"] {
-    display: inline-block;
-    padding: 4px 10px;
-    background-color: #eff6ff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 72px;
+    height: 36px;
+    padding: 0;
+    box-sizing: border-box;
+    
     color: #2563eb;
-    border-radius: 4px;
-    font-size: 12px;
-    font-weight: 500;
     text-decoration: none;
+    font-weight: 600;
+    font-size: 12px;
+    
+    
+    border: 1.5px solid #55daff;
+    border-radius: 8px;
+    
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
 }
-
+td a[target="_blank"]::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(255,255,255,0.3), rgba(255,255,255,0));
+    transition: left 0.5s ease;
+}   
+td a[target="_blank"]:hover::before {
+    left: 100%;
+}
 td a[target="_blank"]:hover {
-    background-color: #2563eb;
-    color: #fff;
+    background: #2563eb;
+    color: #ffffff;
+    border-color: #55daff;
+    box-shadow: 0 8px 16px rgba(16, 145, 185, 0.3);
+    transform: translateY(-2px);
+}
+td a[target="_blank"]:active{
+    transform: translateY(0);
 }
 
 /* =========================================

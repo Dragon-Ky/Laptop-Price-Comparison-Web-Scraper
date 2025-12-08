@@ -28,7 +28,7 @@ $site_registry = [
 ];
 
 /* ======================  GET INPUT  ====================== */
-$query = trim($_GET['q'] ?? '');
+$query = trim($_GET['products'] ?? '');
 
 /* ======================  LƯU LỊCH SỬ TÌM KIẾM  ====================== */
 // Lưu lịch sử ngay khi người dùng bấm tìm (không kiểm tra gì)

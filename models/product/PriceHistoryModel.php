@@ -167,4 +167,59 @@ class PriceHistoryModel {
             ];
         }
     }
+    /**
+     * Lấy danh sách biến động giá mới nhất (Cho bảng Dashboard)
+     * Logic: Lấy giá mới nhất, kèm theo giá liền kề trước đó để so sánh
+     */
+    public function getRecentPriceChanges(int $limit = 5): array {
+        $sql = "
+            SELECT 
+                p.product_id,
+                p.name,
+                p.source_site,
+                p.url,
+                ph_new.recorded_price as new_price,
+                ph_new.recorded_at,
+                -- Subquery lấy giá cũ liền kề
+                (
+                    SELECT ph_old.recorded_price 
+                    FROM price_history ph_old 
+                    WHERE ph_old.product_id = p.product_id 
+                    AND ph_old.recorded_at < ph_new.recorded_at 
+                    ORDER BY ph_old.recorded_at DESC 
+                    LIMIT 1
+                ) as old_price
+            FROM price_history ph_new
+            JOIN products_master p ON ph_new.product_id = p.product_id
+            -- Chỉ lấy những dòng mới nhất trong bảng history
+            ORDER BY ph_new.recorded_at DESC
+            LIMIT :limit
+        ";
+
+        try {
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+            $stmt->execute();
+            $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            // Xử lý tính toán % tăng/giảm ngay tại đây cho View đỡ khổ
+            foreach ($results as &$row) {
+                $row['old_price'] = $row['old_price'] ?? $row['new_price']; // Nếu ko có giá cũ thì bằng giá mới
+                $change_amount = $row['new_price'] - $row['old_price'];
+                
+                if ($row['old_price'] > 0) {
+                    $row['percent_change'] = round(($change_amount / $row['old_price']) * 100, 1);
+                } else {
+                    $row['percent_change'] = 0;
+                }
+                
+                $row['status'] = $change_amount < 0 ? 'decrease' : ($change_amount > 0 ? 'increase' : 'same');
+            }
+
+            return $results;
+        } catch (PDOException $e) {
+            return [];
+        }
+    }
+    
 }

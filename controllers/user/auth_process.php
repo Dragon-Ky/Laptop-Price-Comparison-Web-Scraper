@@ -64,7 +64,7 @@ switch ($action) {
             $_SESSION['email'] = $result['user']['email']; // Thêm email nếu cần
             
             $_SESSION['success'] = 'Chào mừng bạn trở lại!';
-            header('Location: /public/Daskboard.php'); 
+            header('Location: /public/Daskboard/Daskboard.php'); 
         } else {
             // 4. Lấy thông báo lỗi cụ thể từ mảng $result
             $_SESSION['error'] = $result['message'];

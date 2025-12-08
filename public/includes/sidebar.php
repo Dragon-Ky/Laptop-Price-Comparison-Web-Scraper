@@ -7,9 +7,9 @@ $BASE_URL = "/public";
 
 <aside class="w-64 bg-white shadow-md p-4 min-h-screen flex flex-col">
     
-    <div class="mb-6 text-xl font-bold text-center text-blue-600">My App</div>
+    <div class="mt-2 mb-6 text-xl font-bold text-center text-blue-600">LAPTOPSS</div>
 
-    <nav class="space-y-3 text-gray-700 flex-1">
+    <nav class="space-y-3 text-gray-700 flex-1 " >
         <a href="<?= $BASE_URL ?>/Daskboard/Daskboard.php" class="flex items-center gap-3 p-3 hover:bg-gray-100 rounded-md transition-colors">
             <i class="fa-solid fa-house w-5 text-center"></i> 
             <span>Dashboard</span>

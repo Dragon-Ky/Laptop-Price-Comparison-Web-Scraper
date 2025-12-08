@@ -21,7 +21,7 @@ body {
 /* Vùng bao quanh bảng */
 .product-list {
     background: #ffffff;
-    border-radius: 16px;
+    border-radius: 2px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06), 0 4px 16px rgba(0, 0, 0, 0.04);
     padding: 32px;
     margin: 0 auto 20px auto;
@@ -58,7 +58,7 @@ p[style*="text-align:center"] {
 
 /* HEADER CỦA BẢNG */
 .product-list th {
-    background: linear-gradient(135deg, #6e89ff , #5b74ff ,#6e89ff);
+    background: linear-gradient(135deg, #6e89ff);
     color: #ffffff;
     font-weight: 600;
     text-transform: uppercase;
@@ -68,14 +68,15 @@ p[style*="text-align:center"] {
     text-align: left;
     border: none;
     white-space: nowrap; /* Không xuống dòng tiêu đề */
+    text-align: center;
 }
 
 .product-list th:first-child {
-    border-radius: 12px 0 0 0;
+    border-radius: 2px 0 0 0;
 }
 
 .product-list th:last-child {
-    border-radius: 0 12px 0 0;
+    border-radius: 0 2px 0 0;
 }
 
 /* CÁC DÒNG DỮ LIỆU */
@@ -88,7 +89,7 @@ p[style*="text-align:center"] {
 
 .bookmark-table {
     border: 1px solid #667eea;
-    border-radius: 12px;
+    border-radius: 2px;
 }
 
 
@@ -151,8 +152,8 @@ p[style*="text-align:center"] {
 
 /* Cột Giá (Làm nổi bật) */
 .product-list td:nth-child(7) {
-    color: #ef4444 !important; /* Màu đỏ hiện đại */
-    font-weight: 700 !important;
+    color: #000000 !important; /* Màu đỏ hiện đại */
+    
     font-size: 15px;
     white-space: nowrap;
     letter-spacing: -0.3px;
@@ -172,13 +173,13 @@ p[style*="text-align:center"] {
     padding: 0;
     box-sizing: border-box;
     
-    color: #10b981;
+    color: #2563eb;
     text-decoration: none;
     font-weight: 600;
     font-size: 12px;
     
-    background: #ecfdf5;
-    border: 1.5px solid #a7f3d0;
+    
+    border: 1.5px solid #55daff;
     border-radius: 8px;
     
     cursor: pointer;
@@ -203,10 +204,10 @@ p[style*="text-align:center"] {
 }
 
 .product-list a[target="_blank"]:hover {
-    background: #10b981;
+    background: #2563eb;
     color: #ffffff;
-    border-color: #10b981;
-    box-shadow: 0 8px 16px rgba(16, 185, 129, 0.3);
+    border-color: #55daff;
+    box-shadow: 0 8px 16px rgba(16, 145, 185, 0.3);
     transform: translateY(-2px);
 }
 
@@ -216,49 +217,13 @@ p[style*="text-align:center"] {
 
 /* Action Button (Nút Xóa) */
 .action-cell button {
-    display: inline-flex;          /* Sử dụng Flex giống nút Xem */
-    align-items: center;           /* Căn giữa dọc */
-    justify-content: center;       /* Căn giữa ngang */
-    
-    width: 72px;                   /* [QUAN TRỌNG] Bằng width nút Xem */
-    height: 36px;                  /* [QUAN TRỌNG] Bằng height nút Xem */
-    padding: 0 !important;         /* Reset padding để width/height hoạt động chuẩn */
-    box-sizing: border-box;
-
-    background-color: #fef2f2 !important;
-    color: #ef4444 !important;
-    border: 1.5px solid #fca5a5 !important;
-    border-radius: 8px !important; /* Bo tròn lớn hơn */
-    font-weight: 600;
-    font-size: 12px;               /* Đồng bộ font size */
-    cursor: pointer;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-    overflow: hidden;
+    font-size: 12px;
 }
-
-.action-cell button::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: rgba(255, 255, 255, 0.2);
-    transition: left 0.5s ease;
-}
-
-.action-cell button:hover::before {
-    left: 100%;
-}
-
 .action-cell button:hover {
-    background-color: #ef4444 !important;
-    color: #ffffff !important;
-    border-color: #ef4444 !important;
-    box-shadow: 0 8px 16px rgba(239, 68, 68, 0.3);
-    transform: translateY(-2px);
+    color: #5a6b7d;
 }
+
+
 
 .action-cell button:active {
     transform: translateY(0);
@@ -268,8 +233,8 @@ p[style*="text-align:center"] {
 .bookmark-title {
     text-align: center;
     font-size: 42px;
-    font-weight: 800;
-    color: #000;
+    font-weight: 650;
+    color: #667eea;
     margin: 40px 0 50px 0;
     position: relative;
     letter-spacing: -1px;
@@ -278,16 +243,16 @@ p[style*="text-align:center"] {
 }
 
 /* Hiệu ứng gạch chân màu xanh bên dưới */
-.bookmark-title::after {
+/* .bookmark-title::after {
     content: '';
     display: block;
     width: 120px;
     height: 5px;
-    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(90deg, #667eea );
     margin: 20px auto 0;
     border-radius: 3px;
     box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
-}
+} */
 
 /* Màu cho icon bookmark bên cạnh chữ (nếu có) */
 .bookmark-title i {
@@ -295,7 +260,16 @@ p[style*="text-align:center"] {
     margin-right: 12px;
     font-size: 48px;
 }
-
+.product-list td:nth-child(1),
+.product-list td:nth-child(3),
+.product-list td:nth-child(4),
+.product-list td:nth-child(5),
+.product-list td:nth-child(6),
+.product-list td:nth-child(7),
+.product-list td:nth-child(8),
+.product-list td:nth-child(9) {
+    text-align: center;
+}
 /* =========================================
    RESPONSIVE
    ========================================= */
@@ -339,36 +313,103 @@ p[style*="text-align:center"] {
     align-items: center;        /* Căn giữa theo chiều dọc */
     
     padding: 20px 25px;         /* Khoảng cách lề trong */
-    border-radius: 8px;         /* Bo góc */
+    border-radius: 3px;         /* Bo góc */
     box-shadow: 0 4px 6px rgba(0,0,0,0.1); /* Đổ bóng nhẹ */
     color: #ffffff;             /* Mặc định chữ màu trắng */
     min-height: 120px;          /* Chiều cao tối thiểu cho đẹp */
 }
 
+/* tùy chỉnh icon / số để vừa với chiều cao nhỏ hơn */
+
+
+/* Make blue & green narrower horizontally */
+.stat-card.card-blue,
+.stat-card.card-green {
+    /* Prevent them from growing to fill the row */
+    flex: 0 0 250px;    /* chọn chiều ngang cố định 260px */
+    max-width: 250px;
+    min-width: 180px;   /* optional: co nhỏ tới 180px */
+}
+.stat-card:hover {
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15); /* Tăng đổ bóng khi hover */
+    transform: translateY(-3px);            /* Nâng lên một chút khi hover */
+    transition: all 0.2s ease-in-out;
+    
+}
+
+/* allow cards to wrap on small screens */
+.dashboard-stats {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 30px;
+    width: 100%;
+    flex-wrap: wrap;    /* thêm để khi không đủ chỗ sẽ xuống dòng */
+}
+
 /* 3. MÀU SẮC TỪNG THẺ */
 .card-blue {
-    background: linear-gradient(45deg, #0040ff, #00b3ff);  /* Màu xanh dương */
+    background-color: #1058B0; 
+    box-shadow: 0 4px 15px #1058B0;  /* Màu xanh dương */
 }
 
 .card-green {
-    background: linear-gradient(45deg, #00a703, #6aff00);; /* Màu xanh lá */
+    background-color: #3085C8;  /* Màu xanh lá */
+    box-shadow: 0 4px 15px #3085C8;
 }
 
 .card-yellow {
     /* Gradient từ cam sang vàng */
-    background: linear-gradient(45deg,  #ff5e62,#ff9966); 
+    background-color: #4EB1E0;  
     /* Hoặc màu cam xoài hiện đại: */
     /* background: linear-gradient(to right, #f2994a, #f2c94c); */
     
     color: #fff;
-    box-shadow: 0 4px 15px rgba(242, 153, 74, 0.4); /* Đổ bóng nhẹ cùng tông màu */
+    box-shadow: 0 4px 15px #4EB1E0; /* Đổ bóng nhẹ cùng tông màu */
 }
 
-/* Tăng độ đậm của chữ lên một chút để nổi trên nền màu */
-.stat-card.card-yellow .stat-time {
-    font-weight: 700;
-    text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+.stat-card.card-yellow {
+    /* flex-grow: 0 (không tự dãn), flex-shrink: 0 (không co), basis: 450px */
+    flex: 0 0 688px; 
+    max-width: 688px; /* Giới hạn tối đa */
 }
+
+/* Xử lý responsive: Khi màn hình nhỏ thì cho nó full chiều rộng */
+@media (max-width: 992px) {
+    .stat-card.card-yellow {
+        flex: 1;
+        max-width: 100%;
+    }
+}
+/* Tăng độ đậm của chữ lên một chút để nổi trên nền màu */
+
+/* Xử lý riêng cho dòng chữ trong thẻ Vàng/Cam */
+.stat-card.card-yellow .stat-time {
+    /* 3 dòng bắt buộc để hiện dấu ... */
+    white-space: nowrap;      /* Không cho xuống dòng */
+    overflow: hidden;         /* Ẩn phần bị thừa */
+    text-overflow: ellipsis;  /* Thêm dấu ... vào cuối */
+    /* Đảm bảo nó hoạt động trong Flexbox */
+    display: block;
+    max-width: 100%;          /* Chiếm tối đa chiều rộng cho phép của thẻ cha */
+    font-weight: 600;
+    font-size: 32px;
+
+}
+
+/* QUAN TRỌNG: Để text co lại được trong Flexbox, thẻ bao ngoài nó cần min-width */
+.stat-card .stat-content {
+    min-width: 0; /* Giúp nội dung con bên trong có thể kích hoạt ellipsis */
+    flex: 1;      /* Chiếm hết không gian còn lại trừ icon */
+    padding-right: 10px; /* Cách icon ra một chút */
+}
+
+/* force larger sizes for yellow card even when .small/.xsmall added */
+
+.stat-card.card-yellow .stat-time.small { 
+    font-size: 32px; 
+}
+
+
 
 /* 4. TYPOGRAPHY (Chữ) */
 .stat-content {
@@ -384,8 +425,8 @@ p[style*="text-align:center"] {
 }
 
 .stat-number {
-    font-size: 40px;            /* Số to */
-    font-weight: 700;
+    font-size: 32px;            /* Số to */
+    font-weight: 600;
     margin: 0;
     line-height: 1;
 }
@@ -402,22 +443,29 @@ p[style*="text-align:center"] {
     opacity: 0.8;
 }
 
+.stat-card.card-yellow .stat-note { 
+    margin-top: 6px;
+}
 /* Stat card time sizing + overflow handling */
 .stat-card .stat-time {
+    
     display: block;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     /* base size (responsive) */
-    font-size: clamp(1rem, 1.2rem + 0.3vw, 1.6rem);
+    font-size: 32px;
     line-height: 1.1;
     transition: font-size .12s ease;
+    
 }
 
 /* Slightly smaller when content is long */
 .stat-card .stat-time.small {
     font-size: clamp(0.85rem, 1rem + 0.2vw, 1.1rem);
+    width: auto;
 }
+
 
 /* Extra small for very long strings */
 .stat-card .stat-time.xsmall {
@@ -436,7 +484,7 @@ p[style*="text-align:center"] {
 
 /* 5. ICON BÊN PHẢI */
 .stat-icon {
-    font-size: 50px;            /* Icon to */
+    font-size: 40px;            /* Icon to */
     opacity: 0.4;               /* Làm mờ */
     padding-left: 15px;
 }
@@ -449,3 +497,42 @@ p[style*="text-align:center"] {
     }
 }
 
+
+.filter-group select {
+    padding: 8px 12px !important;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    background-color: #fff;
+    font-size: 14px;
+    min-width: 157px;
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.2s;
+    color: #666;
+}
+form .sort_form {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    border: 1px solid #e5e7eb;
+    
+    /* Flexbox để dàn hàng ngang */
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px !important; /* Ghi đè gap inline của bạn */
+    align-items: flex-end !important;
+}
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+   
+}
+
+.filter-group label {
+    font-size: 13px;
+    font-weight: 600 !important;
+    color: #4b5563;
+    text-transform: uppercase;
+}
