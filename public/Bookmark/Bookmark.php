@@ -35,7 +35,7 @@ $bookmarkedProducts = $controller->getBookmarksByUser($_SESSION['user_id']);
             require_once BASE . '/includes/sidebar.php';
     ?>
     
-    <main class="flex-1 p-6 overflow-hidden">
+    <main class="flex-1 ml-64 p-6 overflow-hidden">
          <?php require_once BASE_PATH ."/models/product/Bookmark_View.php"; ?>
 
     </main>

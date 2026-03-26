@@ -28,7 +28,9 @@ $(document).ready(function() {
                 price: starIcon.data('price'),
                 old_price: starIcon.data('old-price') || null,
                 source_site: starIcon.data('site'),
-                specs_summary: starIcon.data('specs')
+                image_url: starIcon.data('image-url'),
+                specs_summary: starIcon.data('specs'),
+                
             },
             dataType: 'json',
 

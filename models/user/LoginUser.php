@@ -16,7 +16,7 @@ function loginUser($email, $password) {
     // 2. Xác minh mật khẩu
     if (password_verify($password, $user['password_hash'])) {
         // Đăng nhập thành công: Khởi tạo session
-        session_start();
+        session_regenerate_id(true);
         $_SESSION['user_id'] = $user['user_id'];
         $_SESSION['email'] = $user['email'];
         return ['success' => true, 'message' => 'Đăng nhập thành công.', 'user' => $user];

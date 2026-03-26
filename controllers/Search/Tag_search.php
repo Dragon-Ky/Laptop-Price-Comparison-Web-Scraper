@@ -1,5 +1,9 @@
 <?php
-/* ======================  HÀM TÁCH THÔNG SỐ (GIỮ NGUYÊN)  ====================== */
+// Tag_search.php
+
+/* =================================================================================
+   PHẦN 1: HÀM TÁCH THÔNG SỐ KỸ THUẬT (PARSE SPECS)
+   ================================================================================= */
 function parse_laptop_specs($name) {
     $spec = [
         'cpu' => '',
@@ -9,9 +13,11 @@ function parse_laptop_specs($name) {
         'display' => ''
     ];
 
-    // CPU Patterns
+    // --- 1. XỬ LÝ CPU ---
     $cpu_patterns = [
-        '/\bXeon(?:®|™)?\s*(?:[A-Z]+[-]?\s*)?\d{3,5}[A-Z0-9]*\b/i',
+        // Bắt Xeon có version (Vd: Xeon E3-1505M v5)
+        '/\bXeon(?:®|™)?\s*(?:[A-Z0-9]+\s*[-]?\s*)?\d{3,5}[A-Z0-9]*(?:\s*v\d+)?\b/i',
+        
         '/\b(?:Ryzen\s*)?AI\s*\d+\s*(?:[A-Z]+\s*)?\d+\b/i',
         '/\bSnapdragon\s*X\s*(?:Elite|Plus)?\s*[-A-Z0-9]+\b/i',
         '/\b(?:Intel\s*)?(?:Core\s*)?Ultra\s*[3579]\s*[-]?\s*\d+[A-Z]*\b/i',
@@ -32,13 +38,13 @@ function parse_laptop_specs($name) {
         }
     }
 
-    // RAM
+    // --- 2. XỬ LÝ RAM ---
     preg_match('/(\d+)\s?gb( ram)?/i', $name, $m);
     if ($m) $spec['ram'] = $m[1] . "GB";
 
-    // Storage
+    // --- 3. XỬ LÝ Ổ CỨNG (STORAGE) ---
     $storage_found = false;
-    // 1) size trước type
+    // Case 1: Số trước (512GB SSD)
     if (preg_match('/(\d+)\s?(gb|tb)\s*(?:ssd|hdd|nvme)/i', $name, $m)) {
         $num = intval($m[1]); $unit = strtolower($m[2]);
         $size_gb = ($unit === 'tb') ? $num * 1024 : $num;
@@ -47,7 +53,7 @@ function parse_laptop_specs($name) {
             $storage_found = true;
         }
     }
-    // 2) type trước size
+    // Case 2: Loại trước (SSD 512GB)
     if (!$storage_found && preg_match('/(?:m\.?2|m2|nvme|ssd|hdd)[^\d]{0,6}(\d+)\s?(gb|tb)/i', $name, $m2)) {
         $num = intval($m2[1]); $unit = strtolower($m2[2]);
         $size_gb = ($unit === 'tb') ? $num * 1024 : $num;
@@ -56,13 +62,14 @@ function parse_laptop_specs($name) {
             $storage_found = true;
         }
     }
-    // 3) fallback
+    // Case 3: Tìm số GB lớn nhất nếu chưa thấy
     if (!$storage_found) {
         if (preg_match_all('/(\d+)\s?(gb|tb)/i', $name, $matches, PREG_SET_ORDER)) {
             $best = null;
             foreach ($matches as $match) {
                 $num = intval($match[1]); $unit = strtolower($match[2]);
                 $size_gb = ($unit === 'tb') ? $num * 1024 : $num;
+                // Lọc ram 8GB/16GB ra, chỉ lấy > 100GB
                 if ($size_gb > 100) {
                     if ($best === null || $size_gb > $best['size_gb']) {
                         $best = ['text' => strtoupper($match[1] . $match[2]), 'size_gb' => $size_gb];
@@ -73,7 +80,7 @@ function parse_laptop_specs($name) {
         }
     }
 
-    // GPU
+    // --- 4. XỬ LÝ GPU (VGA) ---
     $gpu_patterns = [
         '/\b(?:NVIDIA[®™]*\s*)?(?:GeForce[®™]*\s*)?(?:RTX|GTX|MX|Quadro)[®™]*\s*[-]?\s*[A-Z]*\d+[A-Z0-9]*(?:\s*(?:Ti|Super|Ada))?(?:\s+\d+\s*GB)?\b/u',
         '/\b(?:AMD[®™]*\s*)?Radeon[®™]*\s*RX\s*\d+[A-Z]*\b/u',
@@ -91,147 +98,163 @@ function parse_laptop_specs($name) {
         }
     }
 
-    // Display
+    // --- 5. XỬ LÝ MÀN HÌNH ---
     preg_match('/(\d{2}\.?\d*)\s?inch/i', $name, $m);
     if ($m) $spec['display'] = $m[1] . " inch";
 
     return $spec;
 }
 
-/* ======================  HÀM LÀM SẠCH TÊN (FINAL VERSION)  ====================== */
+/* =================================================================================
+   PHẦN 2: HÀM LÀM SẠCH TÊN (GROUPING LOGIC)
+   ================================================================================= */
 function clean_product_name($name) {
-    // =========================================================================
-    // BƯỚC 1: CHUẨN HÓA CƠ BẢN
-    // =========================================================================
-    
-    // 1. Giải mã ký tự HTML (Sửa lỗi &#8243; thành " và &#8211; thành -)
+    // 1. CHUẨN HÓA CƠ BẢN
     $name = html_entity_decode($name, ENT_QUOTES | ENT_HTML5, 'UTF-8');
-
-    // 2. Chuyển về chữ thường để xử lý đồng nhất
+    $name = str_replace(['–', '—'], '-', $name);
+    $name = str_replace(['“', '”', '‘', '’', '"'], ' ', $name);
     $name = mb_strtolower($name, 'UTF-8');
 
+    // 2. XÓA NỘI DUNG TRONG NGOẶC
+    $name = preg_replace('/[\(\[\{].*?[\)\]\}]/u', ' ', $name);
+
     // =========================================================================
-    // BƯỚC 2: XÓA TỪ KHÓA RÁC & MARKETING
+    // 3. XỬ LÝ GOM NHÓM THÔNG MINH (Đặt trước khi cắt chuỗi)
     // =========================================================================
-    $remove_keywords = [
-        // --- Từ khóa bán hàng/Trạng thái ---
-        'chính hãng', 'vn/a', 'nhập khẩu', 'giá rẻ', 'like new', '99%', 'new seal', 
-        'full box', 'fullbox', 'bảo hành', 'trọn đời', 'xách tay', 'cũ', 
-        'mới', 'new', 'hết hàng', 'out of stock', 'ngừng kinh doanh',
 
-        // --- Loại sản phẩm (Thừa) ---
-        'laptop', 'máy tính xách tay', 'notebook', 'ultrabook',
-        'laptop lai máy tính bảng', 'máy tính bảng',
+    // A. Xử lý ACER NITRO V15
+    if (preg_match('/(ANV15[\s-]+\d{2})[\s-]+[A-Z0-9]{4}/i', $name, $matches)) {
+        $name = str_replace($matches[0], $matches[1], $name);
+    }
 
-        // --- Từ khóa Marketing/Tính năng ---
-        'gọn nhẹ', 'mạnh mẽ', 'mỏng nhẹ', 'siêu mỏng', 'sang trọng', 'thời trang',
-        'văn phòng', 'doanh nhân', 'gaming', 'đồ họa', 'gamer', 'creator',
-        'cấu hình cao', 'cấu hình mạnh mẽ', 'siêu mỏng nhẹ', 'hiệu năng cao',
-        'propanel', // <--- Từ khóa gây lệch nhóm trong ảnh bạn gửi
-        
-        // --- Tính năng vật lý ---
-        '2-in-1', '2 in 1', 'xoay gập', '360 độ', '360', 'cảm ứng', 'touch', 'flip',
+    // B. Xử lý ACER NITRO 5
+    if (preg_match('/(AN\d{3}[-\s]+\d{2})[-\s]+[A-Z0-9]{4}/i', $name, $matches)) {
+        $name = str_replace($matches[0], $matches[1], $name);
+    }
 
-        // --- Màu sắc ---
-        'đen', 'trắng', 'bạc', 'xám', 'vàng', 'xanh', 'hồng',
-        'black', 'silver', 'grey', 'gray', 'gold', 'blue', 'pink',
+    // C. Xử lý ASUS TỔNG QUÁT
+    if (preg_match('/([A-Z]{1,2}\d{3,4}[A-Z]{1,2})[-\s]+[A-Z0-9]{3,}/i', $name, $matches)) {
+        $name = str_replace($matches[0], $matches[1], $name);
+    }
 
-        // --- Từ đệm vô nghĩa ---
-        'màn', 'hình', 'inch',
+    // =========================================================================
+    // 4. CẮT ĐUÔI (TRUNCATE) DỰA TRÊN TỪ KHÓA CẤU HÌNH
+    // =========================================================================
+    $cut_patterns = [
+        '/\bnext\s*gen(\s*ai)?\b/u',
+        '/\bcopilot\+?\b/u',
+        '/\bnk\b/u',
+        '/\bchíp\s*ai\b/u',
+        '/\bchip\s*ai\b/u',
+        '/\bwin(dows)?\s*\d+/u',
+        '/\bos\s*:/u',
+        '/\bchính hãng\b/u',
+        '/\bnhập khẩu\b/u',
+        '/\bxeon\b/u',
+        '/\bultra\s*[3579]\b/u',       
+        '/\bcore\s*ultra\b/u',         
+        '/\bcore\s*[3579]\s+\d+/u',
+        '/\b(?:Intel\s*)?Core\s*[3579]\s*[-]?\s*\d{3,5}[A-Z0-9]*\b/i',
+        '/\bi[3579][\s-]*\d{4}/u',     
+        '/\br[3579][\s-]*\d{4}/u',    
+        '/\bryzen\s*\d/u',
+        '/\bcore\s*i[3579]\b/u',
+        '/\b\d+\s*gb\b/u',
+        '/\b\d+\s*tb\b/u',
+        '/\b\d+(\.\d+)?\s*(inch|”|")/u',
+        '/\b(full\s*hd|fhd|2k|4k)\b/u',
     ];
 
-    // Sắp xếp từ khóa dài lên trước để tránh xóa nhầm từ con
-    usort($remove_keywords, function($a, $b) {
-        return strlen($b) - strlen($a);
-    });
+    $shortest_length = mb_strlen($name);
+    $found_cut = false;
 
+    foreach ($cut_patterns as $pat) {
+        if (preg_match($pat, $name, $matches, PREG_OFFSET_CAPTURE)) {
+            $match_str = $matches[0][0];
+            $pos = mb_strpos($name, $match_str);
+            if ($pos !== false && $pos < $shortest_length) {
+                $shortest_length = $pos;
+                $found_cut = true;
+            }
+        }
+    }
+
+    if ($found_cut) {
+        $name = mb_substr($name, 0, $shortest_length);
+    }
+
+    // =========================================================================
+    // 5. XÓA MÃ SKU RÁC (CHỈ CHẠY 1 LẦN DUY NHẤT TẠI ĐÂY)
+    // =========================================================================
+    $parts = explode(' ', preg_replace('/\s+/', ' ', $name));
+    $clean_parts = [];
+    
+    foreach ($parts as $part) {
+        $part = trim($part);
+        if (empty($part)) continue;
+
+        // A. Giữ lại mã có dấu gạch ngang NHƯNG phải kiểm tra độ dài
+        if (str_contains($part, '-') && mb_strlen($part) > 1) {
+            // [MỚI] Nếu mã dài hơn 10 ký tự (như 16-ar0013dx là 11 ký tự) -> XÓA NGAY
+            if (mb_strlen($part) > 10) {
+                continue; 
+            }
+            
+            $clean_parts[] = $part;
+            continue;
+        }
+
+        // B. BẢO VỆ MÃ MODEL CHUẨN
+        
+        // Rule 1: Dạng kẹp (Vd: FX506HC, K3605ZF - Chữ + Số + Chữ)
+        if (preg_match('/^[a-z]{1,2}\d{3,4}[a-z]{1,2}$/i', $part)) {
+            $clean_parts[] = $part;
+            continue;
+        }
+
+        // Rule 2: Dạng Chữ + Số (Vd: PC14250, G15, Nitro5...) - QUAN TRỌNG ĐỂ GIỮ PC14250
+        if (preg_match('/^[a-z]+\d+$/i', $part)) {
+            $clean_parts[] = $part;
+            continue;
+        }
+
+        // C. Xóa mã rác dài (Vd: B93GZAT)
+        if (mb_strlen($part) >= 6) {
+            $has_letter = preg_match('/[a-z]/', $part);
+            $has_digit  = preg_match('/[0-9]/', $part);
+            
+            // Nếu có cả chữ và số (nhưng không lọt vào Rule 1 hoặc Rule 2) thì xóa
+            if ($has_letter && $has_digit) {
+                continue; 
+            }
+        }
+        
+        $clean_parts[] = $part;
+    }
+    $name = implode(' ', $clean_parts);
+
+    // 6. CLEANUP TỪ KHÓA THỪA
+    $remove_keywords = [
+        'laptop', 'máy tính', 'ultrabook',
+        'black', 'silver', 'grey', 'white', 'gold', 'blue',
+        'đen', 'trắng', 'bạc', 'xám', 'vàng', 'xanh',
+        'chính', 'hãng',
+    ];
+    
     foreach ($remove_keywords as $word) {
-        // Dùng \b để đảm bảo xóa nguyên từ, không xóa ký tự trong từ khác
         $name = preg_replace('/\b'.preg_quote($word, '/').'\b/u', ' ', $name);
     }
 
-    // =========================================================================
-    // BƯỚC 3: XÓA CẤU HÌNH & MÃ SẢN PHẨM (REGEX)
-    // =========================================================================
-    
-    // Xóa nội dung trong ngoặc đơn trước (thường là SKU hoặc ghi chú thừa)
-    $name = preg_replace('/\([^\)]+\)/u', ' ', $name);
+    // 7. HOÀN THIỆN & VIẾT HOA CHUẨN
+    $name = preg_replace('/[^a-z0-9\s\-]/u', ' ', $name);
+    $name = trim($name, " -");
+    $name = mb_convert_case($name, MB_CASE_TITLE, "UTF-8");
 
-    $specs_remove = [
-        // 1. Xóa Mã SKU Part Number dạng dấu chấm (VD: NH.QPFSV.00, NH.QPGSV.004)
-        '/\b[a-z0-9]+\.[a-z0-9]+\.[a-z0-9]+\b/u',
+    // Viết hoa toàn bộ các mã máy (Fx506hc -> FX506HC, Pc14250 -> PC14250)
+    $name = preg_replace_callback('/\b[a-zA-Z]+\d+[a-zA-Z0-9]*\b/', function($m) {
+        return strtoupper($m[0]);
+    }, $name);
 
-        // 2. Xóa Mã Model dài nối gạch ngang có chứa số (VD: ANV15-41-R9M1, AN515-57)
-        // Logic: Bắt buộc phần đầu phải có số (ANV15) để không xóa nhầm tên (như dell-xps)
-        '/\b[a-z]*\d+[a-z0-9]*(-[a-z0-9]+){2,}\b/u',
-
-        // 3. Xóa Kích thước màn hình & Số đứng lẻ
-        '/\b\d+(\.\d+)?\s*(inch|”|")\b/u', 
-        '/\b(13|14|15|16|17)\b/u', // <--- Xóa số 15 trong "Nitro V 15" để gom chung với "Nitro V"
-
-        // 4. Xóa Độ phân giải (Viết tắt & Chi tiết)
-        '/\b(fhd|hd|2k|3k|4k|8k|qhd|wqhd|uxga|wuxga)\b/u', 
-        '/\b\d{3,4}\s*x\s*\d{3,4}\b/u',
-
-        // 5. Xóa CPU - Intel Core Ultra (VD: Ultra 5 125U)
-        '/\bultra\s*\d(\s*\w+)?\b/u',
-
-        // 6. Xóa CPU - Mã lẻ (VD: 7300U, 1135G7, 1255U)
-        // Logic: 4-5 số + đuôi đặc thù CPU (u, p, h, hs...)
-        '/\b\d{4,5}(u|p|g\d|h|hs|hx|k|f|qm|hq|y)\b/u',
-
-        // 7. Xóa CPU - Core i / Ryzen truyền thống
-        '/\b(thế hệ|thế hệ thứ|gen|generation)\s*\d+(th|nd|rd|st)?\b/u',
-        '/\b(core\s*)?i\d(-\d{4,5}[a-z]*)?\b/u', 
-        '/\bryzen\s*\d(\s*\d{4,5}[a-z]*)?\b/u',
-
-        // 8. Xóa RAM / Ổ cứng
-        '/\b\d+\s*gb\b/u', 
-        '/\b\d+\s*tb\b/u',
-        '/\b(ssd|hdd|emmc|nvme)\s*(\d+\w*)?\b/u',
-        
-        // 9. Xóa Tần số quét (VD: 144hz, 165hz)
-        '/\b\d+\s*hz\b/u',
-        
-        // 10. Xóa card đồ họa (Cơ bản)
-        '/\b(rtx|gtx|rx)\s*\d{3,4}\w*\b/u',
-        '/\b(vga|card)\b/u',
-    ];
-
-    foreach ($specs_remove as $pat) {
-        $name = preg_replace($pat, ' ', $name);
-    }
-
-    // =========================================================================
-    // BƯỚC 4: XỬ LÝ MÃ ĐẶC THÙ CÒN SÓT & CẮT CHUỖI
-    // =========================================================================
-
-    // Xóa các mã SKU đặc thù dạng cũ (HP, Dell hay dùng)
-    $name = preg_replace('/\b[a-z0-9]{4,10}pa(#\w+)?\b/i', ' ', $name);
-    $name = preg_replace('/\b[a-z0-9]{5,12}(vn|us|tu|hn|in|ww|aum|sus)\b/i', ' ', $name);
-
-    // Cắt chuỗi tại các ký tự phân tách mạnh (|, /, ,, - dài)
-    // Thêm ký tự '–' (dash dài) do html_entity_decode tạo ra
-    $parts = preg_split('/[|\/\\\,–]/u', $name); 
-    
-    // Lấy phần đầu tiên làm tên gốc
-    $clean_name = trim($parts[0]);
-
-    // =========================================================================
-    // BƯỚC 5: LÀM SẠCH CUỐI CÙNG
-    // =========================================================================
-    
-    // Chỉ giữ lại chữ cái và số, thay ký tự đặc biệt bằng khoảng trắng
-    $clean_name = preg_replace('/[^a-z0-9\s]/u', ' ', $clean_name);
-
-    // Xóa khoảng trắng thừa (nhiều dấu cách thành 1 dấu cách)
-    $final_name = trim(preg_replace('/\s+/', ' ', $clean_name));
-
-    // Fallback: Nếu lọc xong mà chuỗi rỗng (do tên toàn rác), trả về phần đầu gốc đã clean sơ
-    if (strlen($final_name) < 2 && isset($parts[0])) {
-         return trim(preg_replace('/[^a-z0-9\s]/u', ' ', $parts[0]));
-    }
-
-    return $final_name;
+    return trim(preg_replace('/\s+/', ' ', $name));
 }
 ?>

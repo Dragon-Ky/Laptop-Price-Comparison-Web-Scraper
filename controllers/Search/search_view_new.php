@@ -1,75 +1,14 @@
 <link rel="stylesheet" href="/assets/CSS/search_result.css">
-
-<style>
-    /* CSS Giữ nguyên như cũ cho đẹp */
-    .product-group-card {
-        background: #fff;
-        border: 1px solid #e0e0e0;
-        border-radius: 8px;
-        margin-bottom: 20px;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-        overflow: hidden;
-        transition: transform 0.2s;
-    }
-    .product-group-card:hover {
-        border-color: #007bff;
-        transform: translateY(-2px);
-    }
-    .group-header {
-        padding: 20px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        cursor: pointer;
-        background: #fff;
-    }
-    .group-info h3 {
-        margin: 0 0 10px 0;
-        font-size: 1.2rem;
-        color: #333;
-    }
-    /* Thêm style cho phần cấu hình chi tiết bên trong danh sách shop */
-    .shop-specs-detail {
-        font-size: 0.8rem;
-        color: #666;
-        display: block;
-        margin-top: 4px;
-    }
-    .group-price-action {
-        text-align: right;
-        min-width: 220px;
-    }
-    .price-range {
-        font-size: 1.25rem;
-        font-weight: bold;
-        color: #d70018;
-        margin-bottom: 8px;
-    }
-    .btn-compare {
-        background: #007bff;
-        color: white;
-        border: none;
-        padding: 8px 16px;
-        border-radius: 4px;
-        cursor: pointer;
-        font-weight: 600;
-    }
-    .group-sellers {
-        display: none;
-        border-top: 1px solid #e0e0e0;
-        background: #f8f9fa;
-    }
-    .seller-table { width: 100%; border-collapse: collapse; }
-    .seller-table td, .seller-table th { padding: 12px 20px; text-align: left; border-bottom: 1px solid #eee; }
-    .btn-visit { background: #ffffffff; color: white; padding: 6px 12px; border-radius: 4px; text-decoration: none; }
-</style>
-
+<link rel="stylesheet" href="/assets/CSS/search-view-new.css">
 <?php
+// Lấy các tham số filter từ URL để giữ lại trạng thái select box
 $s_price     = $_GET['price_range'] ?? '';
 $s_money     = $_GET['sort'] ?? '';
 $s_num_shops = $_GET['num_shops'] ?? '';
 ?>
-
+<link rel="icon" type="image/png" href="/public/images/logo_icon.png">
+        
+<link rel="shortcut icon" href="/public/images/logo_icon.png">
 <h2>Kết quả tìm kiếm cho: <em><?= htmlspecialchars($query) ?></em></h2>
 
 <form method="GET" style="margin:20px 0; display: flex; flex-wrap: wrap; gap: 15px; align-items: end;">
@@ -106,16 +45,14 @@ $s_num_shops = $_GET['num_shops'] ?? '';
     </div>
 
     <div class="filter-group">
-        <button type="submit" style="padding: 6px 15px; cursor:pointer; background: #007bff; color: white; border: none; border-radius: 4px;">
-            Lọc Ngay
-        </button>
+        <button type="submit" class="btn-filter">Lọc Ngay</button>
     </div>
 </form>
 
 <hr>
 
 <?php if (!empty($error_message)): ?>
-    <div style="padding: 20px; background: #fff3cd; color: #856404; border-radius: 5px;">
+    <div class="alert-warning">
         <?= $error_message ?>
     </div>
 <?php elseif (!empty($grouped_products)): ?>
@@ -126,9 +63,27 @@ $s_num_shops = $_GET['num_shops'] ?? '';
         <div class="product-group-card">
             
             <div class="group-header" onclick="toggleSellers('<?= $key ?>')">
+                
+                <div class="group-image">
+                    <?php 
+                        $img_src = !empty($group['image']) ? $group['image'] : 'https://via.placeholder.com/150x150.png?text=No+Image'; 
+                    ?>
+                    <img src="<?= htmlspecialchars($img_src) ?>" alt="<?= htmlspecialchars($group['display_name']) ?>" onerror="this.src='https://via.placeholder.com/150x150.png?text=Error'">
+                </div>
+
                 <div class="group-info">
                     <h3><?= htmlspecialchars($group['display_name']) ?></h3>
-                    <div style="font-size:0.9rem; color:#888;">
+                    
+                    <div class="specs-summary">
+                        <?php if(!empty($group['specs']['cpu'])): ?>
+                            <span class="specs-badge">CPU: <?= $group['specs']['cpu'] ?></span>
+                        <?php endif; ?>
+                        <?php if(!empty($group['specs']['ram'])): ?>
+                            <span class="specs-badge">RAM: <?= $group['specs']['ram'] ?></span>
+                        <?php endif; ?>
+                    </div>
+
+                    <div class="shop-count">
                         Có <strong><?= count($group['sellers']) ?></strong> lựa chọn cấu hình/giá bán
                     </div>
                 </div>
@@ -161,6 +116,7 @@ $s_num_shops = $_GET['num_shops'] ?? '';
                     </thead>
                     <tbody>
                         <?php 
+                        // Sắp xếp giá thấp đến cao trong danh sách con
                         usort($group['sellers'], fn($a, $b) => $a['price'] <=> $b['price']);
                         ?>
                         
@@ -177,23 +133,32 @@ $s_num_shops = $_GET['num_shops'] ?? '';
                                 <td>
                                     <strong><?= htmlspecialchars($seller['name']) ?></strong>
                                     <span class="shop-specs-detail">
-                                        CPU: <?= $seller['cpu'] ?> | RAM: <?= $seller['ram'] ?> | SSD: <?= $seller['storage'] ?>
+                                        CPU: <?= $seller['cpu'] ?> | RAM: <?= $seller['ram'] ?> | Ổ Cứng: <?= $seller['storage'] ?>
                                     </span>
                                 </td>
                                 <td style="color: #d70018; font-weight: bold;">
                                     <?= format_price($seller['price']) ?>
                                 </td>
                                 <td style="text-align: center;">
-                                    <a href="<?= $seller['url'] ?>" target="_blank" class="btn-visit">Xem</a>
-                                    <span class='<?= $star_class ?>' 
-                                          style="font-size: 20px; cursor: pointer; margin-left: 10px; vertical-align: middle;"
-                                          data-url='<?= htmlspecialchars($seller['url']) ?>'
-                                          data-name='<?= htmlspecialchars($seller['name']) ?>'
-                                          data-site='<?= htmlspecialchars($seller['site']) ?>'
-                                          data-price='<?= $seller['price'] ?>'
-                                          aria-pressed='<?= ($is_bookmarked ? 'true':'false') ?>'>
-                                          <?= $star_html ?>
-                                    </span>
+                                    <a href="<?= $seller['url'] ?>" target="_blank" class="btn-visit">Tới nơi bán</a>
+                                    <?php 
+    // Tạo chuỗi cấu hình tóm tắt để lưu vào DB
+                                 $specs_str = "CPU: {$seller['cpu']} | RAM: {$seller['ram']} | SSD: {$seller['storage']}";
+                                ?>
+                                <span class='<?= $star_class ?>' 
+                                    style="font-size: 22px; cursor: pointer; margin-left: 10px; vertical-align: middle;"
+                                    data-url='<?= htmlspecialchars($seller['url']) ?>'
+                                    data-name='<?= htmlspecialchars($seller['name']) ?>'
+                                    data-site='<?= htmlspecialchars($seller['site']) ?>'
+                                    data-price='<?= $seller['price'] ?>'
+                                    
+                                    data-old-price='<?= $seller['old_price'] ?? 0 ?>'
+                                    
+                                    data-specs-summary='<?= htmlspecialchars($specs_str) ?>'
+                                    data-image='<?= htmlspecialchars($seller_img) ?>'
+                                    aria-pressed='<?= ($is_bookmarked ? 'true':'false') ?>'>
+                                    <?= $star_html ?>
+                                </span>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
@@ -206,18 +171,58 @@ $s_num_shops = $_GET['num_shops'] ?? '';
 
 <?php endif; ?>
 
-<br><a href='../../public/Search/Search.php'>← Quay lại</a>
+<?php
+    // Logic: Nếu có session user -> Về trang Search nội bộ.
+    // Nếu không -> Về trang chủ (Landing Page).
+    $back_link = isset($_SESSION['user_id']) ? '../../public/Search/Search.php' : '/landing_page.php';
+?>
+<div style="margin-top: 30px;">
+    <a href="<?= $back_link ?>" style="text-decoration: none; font-weight: bold; color: #555;">
+        ← Quay lại trang tìm kiếm
+    </a>
+</div>
 
 <script>
     function toggleSellers(id) {
         var el = document.getElementById('sellers-' + id);
-        el.style.display = (el.style.display === "block") ? "none" : "block";
+        // Toggle hiển thị
+        if (el.style.display === "block") {
+            el.style.display = "none";
+        } else {
+            el.style.display = "block";
+        }
     }
 </script>
 
 <link rel="stylesheet" href="/assets/CSS/bookmark_star.css">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <script>
     window.userLoggedIn = <?= isset($_SESSION['user_id']) ? 'true' : 'false' ?>;
 </script>
+
 <script src="/assets/JavaScript/bookmark_star.js"></script>
+
+<script>
+    $(document).ready(function() {
+        // Sử dụng event delegation để bắt sự kiện click vào ngôi sao
+        $(document).on('click', '.btn-bookmark-star', function(e) {
+            // Nếu chưa đăng nhập
+            if (!window.userLoggedIn) {
+                // Ngăn chặn hành động Ajax mặc định
+                e.preventDefault(); 
+                e.stopImmediatePropagation(); 
+
+                // Hỏi người dùng
+                var confirmLogin = confirm("Chức năng 'Lưu yêu thích' chỉ dành cho thành viên.\nBạn có muốn đăng nhập ngay bây giờ không?");
+                
+                if (confirmLogin) {
+                    // Chuyển hướng sang trang đăng nhập
+                    window.location.href = '/public/user/login.php';
+                }
+                return false;
+            }
+        });
+    });
+</script>
+<style 

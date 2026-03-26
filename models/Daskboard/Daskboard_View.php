@@ -1,14 +1,14 @@
 <?php
 // 1. Gọi file Model
-require_once BASE_PATH . '/models/Daskboard/Daskboard_models.php';
+require_once BASE_PATH . '/controllers/Daskboard/Daskboard_controler.php';
 require_once BASE_PATH . '/controllers/Search/Tag_search.php';
 require_once BASE_PATH . '/models/product/PriceHistoryModel.php';
 
 // 2. Khởi tạo đối tượng từ Class
-$dashboardModel = new Daskboard_models();
+$dashboardModel = new Daskboard_controler();
 $priceHistoryModel = new PriceHistoryModel();
 
-// 3. Gọi các hàm từ đối tượng đó (không cần truyền $conn nữa vì Class đã tự lo rồi)
+// 3. Gọi các hàm từ đối tượng đó 
 $totalLaptops = $dashboardModel->getTotalTrackedLaptops();
 $saleToday    = $dashboardModel->getPriceDropsToday();
 $search24h    = $dashboardModel->getSearchCountLast24h();
@@ -89,8 +89,8 @@ if (!empty($topBookmarks)) {
             </div>
         </div>
 
-        <div class="row"  style="padding-right: 5px;">
-            <div class="stat-card" style="min-height: 400px;; background: #fff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); width: 66.1%; margin-right :5px;">
+        <div class="row"  style="padding-right: 5px; height: 590px">
+            <div class="stat-card" style="height: 590px; overflow-y: auto; background: #fff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); width: 66.1%; margin-right :5px;">
             <div class="card-header" style="padding: 15px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center;">
                 <h5 style="margin: 0; font-weight: bold; color: #0d6efd;">
                     <i class="fa-solid fa-money-bill-trend-up"></i> Biến động giá mới nhất
@@ -197,8 +197,7 @@ if (!empty($topBookmarks)) {
                                                 <?= number_format($item['search_count']) ?> lượt tìm
                                             </small>
                                         </div>
-
-                                       <a href="/controllers/Search/search.php?products=<?= urlencode($item['query_text'])?>"
+                                       <a href="/controllers/Search/search_new.php?products=<?= urlencode($item['query_text'])?>"
                                         class="fa-solid fa-magnifying-glass btn-search-icon" 
                                         title="Tìm kiếm ngay: <?= htmlspecialchars($item['query_text']) ?>">
                                         </a>

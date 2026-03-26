@@ -1,11 +1,5 @@
 <?php
 session_start();
-if (!isset($_SESSION['user_id'])) {
-   
-    header("Location: /public/user/login.php"); 
-    exit(); 
-}
-
 ?>
 <!DOCTYPE html>
 <html lang="vi">
@@ -30,7 +24,7 @@ if (!isset($_SESSION['user_id'])) {
     require_once BASE . '/includes/sidebar.php';
     ?>
 
-    <main class="main-content">
+    <main class="main-content flex-1 ml-64">
         
         <h2 class="search-title">Tra Cứu Giá Laptop</h2>
         

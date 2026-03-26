@@ -25,10 +25,24 @@ if (isset($bookmarkedProducts) && is_array($bookmarkedProducts)) {
 
 $discount_count = 0;
 $historyModel = null;
+
 if (class_exists('PriceHistoryModel')) {
     try {
         $historyModel = new PriceHistoryModel(); 
-        $discount_count = (int) $historyModel->countPriceDrops();
+        
+        // --- SỬA LỖI: Chỉ đếm trong danh sách bookmark của user ---
+        if (!empty($bookmarkedProducts)) {
+            foreach ($bookmarkedProducts as $bp) {
+                // Kiểm tra biến động giá cho từng sản phẩm trong bookmark
+                $pc = $historyModel->getPriceChangePercent($bp['product_id']);
+                
+                // Nếu trạng thái là 'down' (giảm giá) thì tăng biến đếm
+                if (isset($pc['status']) && $pc['status'] === 'down') {
+                    $discount_count++;
+                }
+            }
+        }
+
     } catch (Throwable $e) {}
 }
 

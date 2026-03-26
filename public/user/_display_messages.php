@@ -1,7 +1,6 @@
 <?php
 // File: /public/user/_display_messages.php
-// File này KHÔNG cần session_start()
-// vì nó sẽ được nhúng vào file CHA (như login.php) VỐN ĐÃ CÓ session_start()
+// Mục đích: Hiển thị thông báo lỗi và thành công từ session
 
 if (isset($_SESSION['error'])) {
     // Hiển thị Lỗi (bạn có thể đổi style)

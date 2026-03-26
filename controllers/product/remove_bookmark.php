@@ -6,7 +6,7 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 define('BASE_PATH', dirname(dirname(__DIR__))); 
-require_once BASE_PATH . '/models/product/BookmarkModel.php'; // Sửa đường dẫn này nếu cần
+require_once BASE_PATH . '/models/product/BookmarkModel.php'; 
 
 // Chỉ chấp nhận POST và đã đăng nhập
 if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !isset($_SESSION['user_id'])) {

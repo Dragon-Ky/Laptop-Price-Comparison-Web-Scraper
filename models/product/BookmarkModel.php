@@ -1,9 +1,7 @@
 <?php
 // models/BookmarkModel.php
 
-// Giả định getPDO() đã được nhúng (thường qua file config/connetdata.php)
-
-require_once BASE_PATH . "/config/connetdata.php";   // hoặc file chứa hàm getPDO()
+require_once BASE_PATH . "/config/connetdata.php";   
 
 class BookmarkModel {
     private $pdo;

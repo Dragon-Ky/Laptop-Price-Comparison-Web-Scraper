@@ -42,6 +42,7 @@ $product_data = [
     'old_price'     => ($old_price_raw === '') ? null : $old_price_raw,
     'source_site'   => $_POST['source_site'] ?? '',
     'specs_summary' => $_POST['specs_summary'] ?? null,
+    'image_url'    => $_POST['image_url'] ?? null,
     
 ];
 
@@ -114,7 +115,6 @@ try {
 
 
 } catch (PDOException $e) {
-    // error_log("Bookmark Controller Error: " . $e->getMessage());
     // $response['message'] = 'Lỗi cơ sở dữ liệu. Vui lòng thử lại.';
     $response['message'] = $e->getMessage();
 }

@@ -8,6 +8,9 @@ session_start();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Đăng Ký</title>
     <link rel="stylesheet" href="/assets/CSS/user.css"> 
+    <link rel="icon" type="image/png" href="/public/images/logo_icon.png">
+        
+    <link rel="shortcut icon" href="/public/images/logo_icon.png">
 </head>
 <body>
 <div class="form-container" id="register-form">

@@ -3,18 +3,18 @@
 
 session_start();
 
-// Giữ lại logic quan trọng này: Lấy email từ session
+// Lấy email từ session
 $email_to_reset = $_SESSION['reset_email'] ?? '';
 
-// ===================================================================
-// LOGIC BẢO VỆ: (Giữ nguyên)
+
+// LOGIC BẢO VỆ: 
 // Nếu không có email trong session (chưa qua Bước 1), đuổi về
 if (empty($email_to_reset)) {
     $_SESSION['error'] = 'Vui lòng nhập lại gmail.';
     header('Location: forgot_password_OTP.php');
     exit;
 }
-// ===================================================================
+
 ?>
 
 <!DOCTYPE html>
@@ -22,13 +22,16 @@ if (empty($email_to_reset)) {
 <head>
     <title>Khôi Phục Mật Khẩu</title>
     <link rel="stylesheet" href="/assets/CSS/user.css">
+    <link rel="icon" type="image/png" href="/public/images/logo_icon.png">
+        
+    <link rel="shortcut icon" href="/public/images/logo_icon.png">
 </head>
 <body>
     
     <div class="form-container">
         
         <?php
-        // SỬA 1: Dùng file thông báo chung cho nhất quán
+        
         include '_display_messages.php';
         ?>
 

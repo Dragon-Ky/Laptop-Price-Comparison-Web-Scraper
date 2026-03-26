@@ -1,5 +1,5 @@
 <?php
-session_start(); // <-- BẮT BUỘC VẪN PHẢI CÓ Ở ĐẦU TIÊN
+session_start(); 
 ?>
 <!DOCTYPE html>
 <html lang="vi">
@@ -8,6 +8,9 @@ session_start(); // <-- BẮT BUỘC VẪN PHẢI CÓ Ở ĐẦU TIÊN
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Đăng Nhập</title>
+    <link rel="icon" type="image/png" href="/public/images/logo_icon.png">
+        
+    <link rel="shortcut icon" href="/public/images/logo_icon.png">
 </head>
 <body>
 <div class="form-container" id="login-form">

@@ -5,17 +5,18 @@
  * Tải HTML từ một URL dùng cURL, giả lập trình duyệt
  */
 function curl_get($url) {
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $url);
+    $ch = curl_init(); // Khởi tạo cURL session
+    curl_setopt($ch, CURLOPT_URL, $url); // Đặt URL cần tải
+    //Tạo chuỗi User-Agent giả lập trình duyệt Chrome trên Windows
     $userAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.127 Safari/537.36';
     curl_setopt($ch, CURLOPT_USERAGENT, $userAgent);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); // Yêu cầu trả kết quả về dạng chuỗi (string) để lưu vào biến
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);//Cho phép tự động đi theo các đường dẫn chuyển hướng (Redirect)
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);//Tắt kiểm tra chứng chỉ bảo mật SSL (HTTPS)
     curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 10); 
-    $html_text = curl_exec($ch);
-    if (curl_errno($ch)) {
+    curl_setopt($ch, CURLOPT_TIMEOUT, 10); //Giới hạn thời gian tối đa để thực hiện request là 10 giây
+    $html_text = curl_exec($ch); //Thực thi cURL và lưu kết quả HTML lấy được vào biến $html_text
+    if (curl_errno($ch)) { //Kiểm tra xem có lỗi cURL nào xảy ra không
         error_log('Lỗi cURL khi tải '. $url. ': '. curl_error($ch));
         curl_close($ch);
         return false;
@@ -52,7 +53,7 @@ function format_price($price) {
     // Ép về chuỗi
     $price = trim((string)$price);
 
-    // ✅ Nếu có chuỗi dư 8363 hoặc 8.363 ở cuối thì xóa
+    //  Nếu có chuỗi dư 8363 hoặc 8.363 ở cuối thì xóa
     if (preg_match('/(8[.,]?363)$/', $price)) {
         $price = preg_replace('/(8[.,]?363)$/', '', $price);
     }
@@ -129,63 +130,53 @@ function is_laptop($name) {
 
 /**
  * Kiểm tra xem tên sản phẩm có phải là phụ kiện/linh kiện không
- * (VD: Sạc laptop, Pin, Màn hình, RAM...)
  */
 function is_accessory($name) {
+    // 1. Chuyển tên sản phẩm về chữ thường (hỗ trợ tiếng Việt)
+    $name_lower = mb_strtolower($name, 'UTF-8');
+    
+    // 2. Danh sách từ khóa (Tất cả phải viết thường)
     $accessory_keywords = [
-        'sạc',
-        'pin',
-        'pin dự phòng',
-        'adapter',
-        'charger',
-        'cáp',
-        'cable',
-        'bàn phím',
-        'keyboard', 
-        'chuột',
-        'mouse',
-        'tai nghe',
-        'headphone',
-        'speaker',
-        'loa',
-        'màn hình',
-        'monitor',
-        'ram',
-        'ổ cứng',
-        'ssd',
-        'hdd',
-        'gpu',
-        'vga',
-        'card màn hình',
-        'bộ nhớ',
-        'cpu',
-        'mainboard',
-        'bo mạch',
-        'quạt',
-        'fan',
-        'tản nhiệt',
-        'cooling pad',
-        'pad',
-        'túi',
-        'balo',
-        'case',
-        'bao',
-        'kính cường lực',
-        'miếng dán',
-        'dán màn hình',
-        'hub',
-        'dock',
-        'bộ chuyển',
-        'converter',
-        'nút cách ly',
-        'bộ vệ sinh',
-        'làm sạch'
+        // --- Nguồn máy tính (PSU) ---
+        'nguồn',                  // Bắt từ "Nguồn"
+        'psu',                    // Power Supply Unit
+        '80 plus',                // Chuẩn nguồn (Gold, Bronze...)
+        'thermaltake',            // Hãng nguồn/case hay gặp
+        'corsair', 
+        'coolermaster',
+        'antec',
+        'Card màn hình','Card màn hình rời',
+        // --- Linh kiện khác  ---
+        'sạc', 'adapter', 'charger',
+        'pin', 'battery',
+        'cáp', 'cable', 'dây',
+        'bàn phím', 'keyboard', 'keycap',
+        'chuột', 'mouse',
+        'tai nghe', 'headphone', 'headset',
+        'loa', 'speaker',
+        'màn hình', 'monitor', 'lcd',
+        'ram', 'ddr4', 'ddr5',
+        'ổ cứng', 'ssd', 'hdd',
+        'gpu', 'vga', 'card', 'rtx', 'gtx', // Cẩn thận kẻo xóa nhầm Laptop Gaming 
+        'mainboard', 'bo mạch',
+        'fan', 'quạt', 'tản nhiệt', 'cooling',
+        'case', 'vỏ máy',
+        'balo', 'túi', 'cặp',
+        'hub', 'dock',
+        'máy in', 'printer',
+        'máy chiếu', 'projector',
+        'máy scan',
+        'webcam',
+        'router', 'wifi',
+        'server', 'máy chủ',
     ];
     
-    $name_lower = strtolower($name);
-    
     foreach ($accessory_keywords as $keyword) {
+        // Kiểm tra từ khóa có nằm trong tên không
         if (str_contains($name_lower, $keyword)) {
+            // LƯU Ý: Một số laptop có tên chứa "Card" hoặc "SSD" trong tên cấu hình
+            // Nên cần loại trừ nếu nó thực sự là Laptop
+            // Nhưng ở hàm này kiểm tra accessory thuần túy.
             return true;
         }
     }

@@ -13,10 +13,10 @@ define('BASE_PATH', dirname(__DIR__));
 // Tải helper & file scraper
 // Giả định các file này đã được định nghĩa đúng đường dẫn
 require_once BASE_PATH . '/core/helpers.php';
-require_once BASE_PATH . '/sites/tinhocngoisao.php';
+require_once BASE_PATH . '/sites/phuccanh.php'; 
 
 // --- 2. Nhập từ khóa test ---
-$query = 'Dell'; // 👉 bạn có thể đổi từ khóa này để test
+$query = 'LapTop Dell'; // 👉 bạn có thể đổi từ khóa này để test
 echo "<h1>Bắt đầu test scraper cho <em>Tin Hoc Ngoi Sao</em></h1>";
 echo "<p>Từ khóa test: <strong>$query</strong></p>";
 echo "<hr>";
@@ -24,7 +24,7 @@ echo "<hr>";
 // --- 3. Tải HTML ---
 echo "<h3>Bước 1: Tải và Tiền Xử Lý HTML...</h3>";
 $search_slug = urlencode(trim($query));
-$url = "https://tinhocngoisao.com/search?q=filter=(title:product%20contains%20laptop%20" . $search_slug . ")||(sku:product%20contains%20laptop%20" . $search_slug . ")&sortby=sold_quantity:product=desc";
+$url = "https://www.phucanh.vn/tim?q=" . urlencode($search_slug);
 echo "<p>Đang tải từ URL: <a href='$url' target='_blank'>$url</a></p>";
 
 $html = curl_get($url); 
@@ -83,7 +83,7 @@ echo "<hr>";
 // --- 5. Test Lọc Sản Phẩm (Sử dụng hàm chính) ---
 echo "<h3>Bước 3: Test Hàm Lọc Chi Tiết (getTinHocNgoiSaoProducts)...</h3>";
 
-$results = getTinHocNgoiSaoProducts($query); // Gọi hàm đã có code debug bên trong
+$results = getPhucAnhProducts($query); // Gọi hàm đã có code debug bên trong
 
 if (!empty($results)) {
     echo "<h2 style='color:green;'>🎉 THÀNH CÔNG!</h2>";

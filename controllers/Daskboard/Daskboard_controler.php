@@ -1,7 +1,7 @@
 <?php
 require_once BASE_PATH . "/config/connetdata.php";
 
-class Daskboard_models {
+class Daskboard_controler {
     private $conn;
 
     public function __construct() {
