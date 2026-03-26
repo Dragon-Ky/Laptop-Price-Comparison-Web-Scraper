@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install -y libcurl4-openssl-dev pkg-config libssl-
 RUN docker-php-ext-install curl
 
 # Copy toàn bộ code từ thư mục src vào thư mục mặc định của Apache
-COPY ./src /var/www/html/
+COPY . /var/www/html/
 
 # Phân quyền để server có thể đọc/ghi file (nếu bạn lưu kết quả ra file)
 RUN chown -R www-data:www-data /var/www/html
