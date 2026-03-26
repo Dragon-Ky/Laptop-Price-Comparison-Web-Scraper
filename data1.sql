@@ -1,8 +1,8 @@
 -- --------------------------------------------------------
 -- Tên Database
 -- --------------------------------------------------------
-CREATE DATABASE IF NOT EXISTS `WED_Compare_Laptop_Prices` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE `WED_Compare_Laptop_Prices`;
+CREATE DATABASE IF NOT EXISTS `wed_compare_laptop_prices` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE `wed_compare_laptop_prices`;
 
 -- --------------------------------------------------------
 -- 1. Bảng users

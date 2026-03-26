@@ -4,12 +4,11 @@ services:
     container_name: laptop_db
     restart: always
     environment:
-      MYSQL_DATABASE: laptop_compare
-      MYSQL_ROOT_PASSWORD: root
+      - MYSQL_DATABASE=wed_compare_laptop_prices
+      - MYSQL_ROOT_PASSWORD=giaky113
     volumes:
-      # Dòng này cực kỳ quan trọng: Ánh xạ file SQL vào thư mục tự chạy của Docker
-      - ./data1.sql:/docker-entrypoint-initdb.d/data1.sql
       - db_data:/var/lib/mysql
+      - ./data1.sql:/docker-entrypoint-initdb.d/data1.sql
 
   php-app:
     build: .

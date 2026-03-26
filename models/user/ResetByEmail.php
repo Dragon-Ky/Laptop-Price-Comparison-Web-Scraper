@@ -1,14 +1,12 @@
 <?php
-// models/user/ResetByEmail.php (ĐÃ SỬA LẠI ĐỂ GỬI MÃ OTP 6 SỐ)
+// Tránh định nghĩa trùng Constant
+if (!defined('BASE_PATH')) {
+    define('BASE_PATH', dirname(dirname(dirname(__FILE__))));
+}
 
-define('BASE_PATH', dirname(dirname(dirname(__FILE__)))); 
-require_once BASE_PATH . '/core/mail_helper.php'; 
+require_once BASE_PATH . '/config/connetdata.php'; // Đảm bảo đã nạp file kết nối
+require_once BASE_PATH . '/core/mail_helper.php';
 
-/**
- * Khởi tạo và gửi mã OTP 6 số qua email
- * @param string $email Email của người dùng
- * @return array Mảng kết quả ['success' => bool, 'message' => string]
- */
 function initiatePasswordReset($email) {
     $pdo = getPDO(); 
 
