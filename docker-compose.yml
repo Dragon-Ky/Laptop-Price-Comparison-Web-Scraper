@@ -1,9 +1,25 @@
-version: '3.8'
 services:
+  db:
+    image: mysql:8.0
+    container_name: laptop_db
+    restart: always
+    environment:
+      MYSQL_DATABASE: laptop_compare
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      # Dòng này cực kỳ quan trọng: Ánh xạ file SQL vào thư mục tự chạy của Docker
+      - ./data1.sql:/docker-entrypoint-initdb.d/data1.sql
+      - db_data:/var/lib/mysql
+
   php-app:
     build: .
     ports:
       - "8080:80"
     volumes:
       - .:/var/www/html
+    depends_on:
+      - db
     container_name: laptop_scraper_php
+
+volumes:
+  db_data:

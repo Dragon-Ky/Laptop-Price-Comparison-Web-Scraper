@@ -12,3 +12,6 @@ COPY . /var/www/html/
 
 # Phân quyền để server có thể đọc/ghi file (nếu bạn lưu kết quả ra file)
 RUN chown -R www-data:www-data /var/www/html
+
+# Thiết lập landing_page.php làm file chỉ mục mặc định
+RUN echo "DirectoryIndex landing_page.php index.php" >> /etc/apache2/apache2.conf
