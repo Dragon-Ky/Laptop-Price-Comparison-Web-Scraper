@@ -1,9 +1,16 @@
 <?php
 // db_config.php
 
-define('DB_HOST', 'localhost');
+// 1. Đổi 'localhost' thành tên service trong docker-compose 
+define('DB_HOST', 'db'); 
+
+// 2. Tên database 
 define('DB_NAME', 'wed_compare_laptop_prices');
+
+// 3. User mặc định của MySQL Docker thường là root
 define('DB_USER', 'root');
+
+// 4. Mật khẩu 
 define('DB_PASS', 'giaky113');
 
 function getPDO() {
